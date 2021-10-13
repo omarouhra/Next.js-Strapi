@@ -1,6 +1,7 @@
 import axios from "axios";
-function post({ post, posts }) {
-  const otherPosts = posts.filter(article => article.id != post.id);
+function post({ post, posts, categories}) {
+
+  const otherPosts = posts.filter(article => article.id != post.id && article.category.id === post.category.id);
   console.log("thes are other posts", otherPosts);
   return (
     <div>
@@ -49,11 +50,14 @@ export async function getServerSideProps(context) {
   const { id } = params;
   const post = await axios.get(`http://localhost:1337/posts/${id}`);
   const posts = await axios.get("http://localhost:1337/posts");
+  const categories = await axios.get("http://localhost:1337/categories");
 
   return {
     props: {
       post: post.data,
       posts: posts.data,
+      categories: categories.data,
+
     },
   };
 }
